@@ -1,0 +1,4 @@
+name: PalmSkillLib
+version: '1.0'
+main: org.karn.palmskilllib.SkillLib
+api-version: '1.20'
