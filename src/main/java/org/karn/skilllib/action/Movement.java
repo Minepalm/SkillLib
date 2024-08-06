@@ -1,8 +1,10 @@
 package org.karn.skilllib.action;
 
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.world.entity.RelativeMovement;
-import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
+import net.minecraft.world.phys.Vec3;
+import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
@@ -19,5 +21,9 @@ public class Movement {
 
     public static void addPosition(Player p, double x, double y, double z){
         ((CraftPlayer) p).getHandle().connection.send(new ClientboundPlayerPositionPacket(x,y,z,0,0, Set.of(RelativeMovement.values()), -1));
+    }
+
+    public static void addVelocity(Player p, double x, double y, double z){
+        ((CraftPlayer) p).getHandle().connection.send(new ClientboundSetEntityMotionPacket(p.getEntityId(),new Vec3(x,y,z)));
     }
 }

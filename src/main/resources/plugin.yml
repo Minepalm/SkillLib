@@ -1,4 +1,4 @@
-name: PalmSkillLib
+name: SkillLib
 version: '${version}'
-main: org.karn.palmskilllib.SkillLib
+main: org.karn.skilllib.SkillLib
 api-version: '1.20'

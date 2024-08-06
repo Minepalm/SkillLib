@@ -41,6 +41,12 @@ public class SkillMath {
         }
     }
 
+    public static boolean getBoxIntersect(BoundingBox box1, BoundingBox box2) {
+        return (box1.getMinX() < box2.getMaxX() && box1.getMaxX() > box2.getMinX()) &&
+                (box1.getMinY() < box2.getMaxY() && box1.getMaxY() > box2.getMinY()) &&
+                (box1.getMinZ() < box2.getMaxZ() && box1.getMaxZ() > box2.getMinZ());
+    }
+
     public static List<Vector> getBoxPoints(BoundingBox box){
         return getBoxPoints(box.getMin(),box.getMax());
     }
