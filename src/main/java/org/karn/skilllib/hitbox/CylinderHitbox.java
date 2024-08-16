@@ -14,7 +14,7 @@ import java.util.List;
 
 public class CylinderHitbox {
     public static List<Entity> getEntities(World level, Vector pos1, double radius, double height){
-        return getEntities(level,pos1,radius,height,0,360);
+        return getEntities(level,pos1,radius,height,-180,180);
     }
 
     public static List<Entity> getEntities(World level, Vector pos1, double radius, double height, double startAngle, double endAngle){

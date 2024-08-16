@@ -16,8 +16,8 @@ public class BlockCollision {
 
     public static boolean checkCollisionBox(BoundingBox box, Block block){
         Collection<BoundingBox> blockBox = block.getCollisionShape().getBoundingBoxes();
-
         for (BoundingBox b : blockBox) {
+            b.shift(new Vector(block.getX(), block.getY(), block.getZ()));
             if(SkillMath.getBoxIntersect(box, b))
                 return true;
         }

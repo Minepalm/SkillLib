@@ -2,6 +2,7 @@ package org.karn.skilllib.action;
 
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
+import net.minecraft.network.protocol.game.ClientboundTickingStatePacket;
 import net.minecraft.world.entity.RelativeMovement;
 import net.minecraft.world.phys.Vec3;
 import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
@@ -25,5 +26,9 @@ public class Movement {
 
     public static void addVelocity(Player p, double x, double y, double z){
         ((CraftPlayer) p).getHandle().connection.send(new ClientboundSetEntityMotionPacket(p.getEntityId(),new Vec3(x,y,z)));
+    }
+
+    public static void setTickrate(Player p, int tick){
+        ((CraftPlayer) p).getHandle().connection.send(new ClientboundTickingStatePacket(tick, false));
     }
 }
