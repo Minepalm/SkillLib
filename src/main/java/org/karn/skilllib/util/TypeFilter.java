@@ -26,4 +26,8 @@ public class TypeFilter {
     public static boolean isVehicle(Entity entity) {
         return entity instanceof org.bukkit.entity.Vehicle;
     }
+
+    public static boolean compareType(Entity entity, Class<?> clazz) {
+        return clazz.isInstance(entity);
+    }
 }
