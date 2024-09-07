@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/SkillLib.main.iml" filepath="$PROJECT_DIR$/.idea/modules/SkillLib.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/SkillLib.test.iml" filepath="$PROJECT_DIR$/.idea/modules/SkillLib.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/org.karn.SkillLib.main.iml" filepath="$PROJECT_DIR$/.idea/modules/org.karn.SkillLib.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/org.karn.SkillLib.test.iml" filepath="$PROJECT_DIR$/.idea/modules/org.karn.SkillLib.test.iml" />
     </modules>
   </component>
 </project>

@@ -1,0 +1,92 @@
+package org.karn.skilllib.collider;
+
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.util.BoundingBox;
+import org.bukkit.util.RayTraceResult;
+import org.bukkit.util.Vector;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.function.Predicate;
+
+
+public class Capsule extends Collider{
+    private Location start;
+    private Vector direction;
+    private double range;
+    private double lineRadius;
+    //-----------------------------------------------------------------------------------------------------------------------
+
+    public Capsule(Location start,Vector direction,double range,double radius){
+        super(start.getWorld());
+        if(direction.isZero()){
+            range = 0.0;
+            this.center = start.toVector().add(direction.clone().normalize().multiply(range*0.5d));
+        }else{
+            this.center = start.toVector();
+        }
+        this.start = start.clone();
+        this.direction = direction.clone();
+        this.range = range;
+        this.lineRadius = radius;
+    }
+
+    public static Capsule create(Location start,Vector direction,double range,double radius){
+        return new Capsule(start,direction,range,radius);
+    }
+
+    public static Collection<Entity> sortNearest(Capsule capsule, Collection<Entity> collection){
+        ArrayList<Entity> sortedList = new ArrayList<>(collection);
+        Vector startpoint = capsule.start.toVector();
+        sortedList.sort((e1, e2) -> {
+            RayTraceResult result1 = e1.getBoundingBox().expand(capsule.lineRadius)
+                    .rayTrace(startpoint, capsule.direction, capsule.range);
+            double dist1;
+            if (result1 == null) {
+                dist1 = Double.MAX_VALUE;
+            } else {
+                dist1 = startpoint.distanceSquared(result1.getHitPosition());
+            }
+
+            RayTraceResult result2 = e2.getBoundingBox().expand(capsule.lineRadius)
+                    .rayTrace(startpoint, capsule.direction, capsule.range);
+            double dist2;
+            if (result2 == null) {
+                dist2 = Double.MAX_VALUE;
+            } else {
+                dist2 = startpoint.distanceSquared(result2.getHitPosition());
+            }
+            return Double.compare(dist1, dist2);
+        });
+        return sortedList; // 정렬된 리스트 반환
+    };
+
+    public boolean isCollide(BoundingBox box) {
+        return box.clone().expand(lineRadius).rayTrace(start.toVector(), direction, range) != null;
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------------
+    public Collection<Entity> getEntities(@Nullable Predicate<Entity> predicate){
+        Predicate<Entity> fillter = entity -> isCollide(entity.getBoundingBox()) &&
+                (predicate == null || predicate.test(entity));
+        return Collider.getEntitiesInNearChunks(center.toLocation(world),range+lineRadius,fillter);
+    }
+
+    public Collection<Entity> getLivingEntities(@Nullable Predicate<Entity> predicate){
+        Predicate<Entity> fillter = entity ->
+                entity.getType().isAlive() && isCollide(entity.getBoundingBox()) &&
+                        (predicate == null || predicate.test(entity));
+        return Collider.getEntitiesInNearChunks(center.toLocation(world),range+lineRadius,fillter);
+    }
+
+    public Collection<Entity> getPlayers(@Nullable Predicate<Entity> predicate){
+        Predicate<Entity> fillter = entity ->
+                entity.getType().equals(EntityType.PLAYER) && isCollide(entity.getBoundingBox()) &&
+                        (predicate == null || predicate.test(entity));
+        return Collider.getEntitiesInNearChunks(center.toLocation(world),range+lineRadius,fillter);
+    }
+
+}
