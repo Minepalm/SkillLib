@@ -13,9 +13,9 @@ import java.util.Collections;
 import java.util.function.Predicate;
 
 public class Collider {
-    private static final double BIGGEST_ENTITY_WIDTH = 10.0d;
-    private static final double BIGGEST_ENTITY_HEIGHT = 20.0d;
-    private static final double BIGGEST_ENTITY_WIDTH_HALF = BIGGEST_ENTITY_WIDTH/2.0d;
+    protected static final double BIGGEST_ENTITY_WIDTH = 10.0d;
+    protected static final double BIGGEST_ENTITY_HEIGHT = 20.0d;
+    protected static final double BIGGEST_ENTITY_WIDTH_HALF = BIGGEST_ENTITY_WIDTH/2.0d;
     public static final double BIGGEST_ENTITY_DIAGONAL_SIZE =
             Math.sqrt( (Math.pow(BIGGEST_ENTITY_WIDTH, 2)*2.0)  + Math.pow(BIGGEST_ENTITY_HEIGHT, 2));
 

@@ -6,62 +6,54 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
+import org.karn.skilllib.util.SkillMath;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.function.Predicate;
 
-import static java.lang.Math.abs;
-import static java.lang.Math.max;
+public class Arc extends Cylinder{
+    private double startAngle;
+    private double endAngle;
 
-public class Cylinder extends Collider{
-    protected double radius;
-    protected double up;
-    protected double down;
-    protected double diagonal;
-    //-----------------------------------------------------------------------------------------------------------------------
-
-    public Cylinder(Location l, double up,double down,double radius){
-        super(l.getWorld());
-        double height = l.getY() - down + ((up+down)*0.5d);
-        this.center = l.toVector().setY(height);
-        this.radius = radius;
-        this.up = up;
-        this.down = down;
-        Vector top = center.clone().setY(center.getY() + ((up+down)*0.5d));
-        this.diagonal = this.center.distance(top);
+    public Arc(Location l, double up, double down, double radius, double startAngle, double endAngle) {
+        super(l, up, down, radius);
+        this.startAngle = startAngle;
+        this.endAngle = endAngle;
     }
 
-    public static Cylinder create(Location l, double up,double down,double radius){
-        return new Cylinder(l,up,down,radius);
+    public static Arc create(Location l, double up, double down, double radius, double startAngle, double endAngle) {
+        return new Arc(l, up, down, radius, startAngle, endAngle);
     }
 
     public boolean isCollide(BoundingBox box) {
-        if(center.getY() + ((up+down)*0.5d) < box.getMinY() || center.getY() - ((up+down)*0.5d) > box.getMaxY()){
+        if (center.getY() + ((up + down) * 0.5d) < box.getMinY() || center.getY() - ((up + down) * 0.5d) > box.getMaxY()) {
             return false;
         }
 
-        for (Vector point : getPoints(box)) {
-            Vector centerTemp = center.clone().setY(0);
-            double dis = centerTemp.distance(point);
-            if (dis < radius) return true;
-        }
+        var points = SkillMath.getBoxPoints(box);
+        for (Vector point : points) {
+            double dx = point.getX() - center.getX();
+            double dz = point.getZ() - center.getZ();
+            double distanceSquared = dx * dx + dz * dz;
 
+            if (distanceSquared > radius * radius)
+                continue;
+
+            double angle = Math.toDegrees(Math.atan2(dz, dx));
+            angle = (angle + 360) % 360 - ((angle + 360) % 360 > 180 ? 360 : 0);
+            startAngle = (startAngle + 360) % 360 - ((startAngle + 360) % 360 > 180 ? 360 : 0);
+            endAngle = (endAngle + 360) % 360 - ((endAngle + 360) % 360 > 180 ? 360 : 0);
+
+            if (startAngle <= endAngle) {
+                return angle >= startAngle && angle <= endAngle;
+            } else {
+                return angle >= startAngle || angle <= endAngle;
+            }
+        }
         return false;
     }
 
-    private static List<Vector> getPoints(BoundingBox box){
-        Vector min = box.getMin();
-        Vector max = box.getMax();
-        List<Vector> points = new ArrayList<>();
-        points.add(new Vector(min.getX(),0,min.getZ()));
-        points.add(new Vector(min.getX(),0,max.getZ()));
-        points.add(new Vector(max.getX(),0,min.getZ()));
-        points.add(new Vector(max.getX(),0,max.getZ()));
-        return points;
-    }
     //-----------------------------------------------------------------------------------------------------------------------
     public Collection<Entity> getEntities(@Nullable Predicate<Entity> predicate){
         Predicate<Entity> fillter = entity -> isCollide(entity.getBoundingBox()) &&
@@ -82,5 +74,4 @@ public class Cylinder extends Collider{
                         (predicate == null || predicate.test(entity));
         return Collider.getEntitiesInNearChunks(center.toLocation(world),diagonal,fillter);
     }
-
 }
