@@ -4,6 +4,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class SkillLib extends JavaPlugin {
 
+    public static SkillLib that; //in your case "plugin" would be "Main.that"
+
     @Override
     public void onEnable() {
         // Plugin startup logic

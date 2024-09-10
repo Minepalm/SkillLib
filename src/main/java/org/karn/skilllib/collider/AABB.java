@@ -7,9 +7,12 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.util.BoundingBox;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Predicate;
+
+import static org.karn.skilllib.collider.Particle.Line;
 
 public class AABB extends Collider{
     private BoundingBox aabb;
@@ -53,6 +56,44 @@ public class AABB extends Collider{
 
     public boolean isCollide(BoundingBox box) {
         return aabb.overlaps(box);
+    }
+
+
+    public Location[] getAllPoints(){
+        Location[] array = {
+                new Location(this.world,aabb.getMinX(), aabb.getMinY(), aabb.getMinZ()),
+                new Location(this.world,aabb.getMinX(), aabb.getMinY(), aabb.getMaxZ()),
+                new Location(this.world,aabb.getMinX(), aabb.getMaxY(), aabb.getMinZ()),
+                new Location(this.world,aabb.getMinX(), aabb.getMaxY(), aabb.getMaxZ()),
+                new Location(this.world,aabb.getMaxX(), aabb.getMinY(), aabb.getMinZ()),
+                new Location(this.world,aabb.getMaxX(), aabb.getMinY(), aabb.getMaxZ()),
+                new Location(this.world,aabb.getMaxX(), aabb.getMaxY(), aabb.getMinZ()),
+                new Location(this.world,aabb.getMaxX(), aabb.getMaxY(), aabb.getMaxZ())
+        };
+        return array;
+    }
+
+    @Override
+    public void draw(){
+        Location[] points = getAllPoints();
+        Line("END_ROD",points[0],points[1],0,0,0,0,0,0.1f,true,null);
+        Line("END_ROD",points[0],points[2],0,0,0,0,0,0.1f,true,null);
+        Line("END_ROD",points[0],points[4],0,0,0,0,0,0.1f,true,null);
+
+        Line("END_ROD",points[1],points[3],0,0,0,0,0,0.1f,true,null);
+        Line("END_ROD",points[1],points[5],0,0,0,0,0,0.1f,true,null);
+
+        Line("END_ROD",points[2],points[3],0,0,0,0,0,0.1f,true,null);
+        Line("END_ROD",points[2],points[6],0,0,0,0,0,0.1f,true,null);
+
+        Line("END_ROD",points[3],points[7],0,0,0,0,0,0.1f,true,null);
+
+        Line("END_ROD",points[4],points[5],0,0,0,0,0,0.1f,true,null);
+        Line("END_ROD",points[4],points[6],0,0,0,0,0,0.1f,true,null);
+
+        Line("END_ROD",points[5],points[7],0,0,0,0,0,0.1f,true,null);
+
+        Line("END_ROD",points[6],points[7],0,0,0,0,0,0.1f,true,null);
     }
     //-----------------------------------------------------------------------------------------------------------------------
     public Collection<Entity> getEntities(@Nullable Predicate<Entity> predicate){

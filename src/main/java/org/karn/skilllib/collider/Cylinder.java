@@ -15,6 +15,7 @@ import java.util.function.Predicate;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
+import static org.karn.skilllib.collider.Particle.Line;
 
 public class Cylinder extends Collider{
     protected double radius;
@@ -61,6 +62,24 @@ public class Cylinder extends Collider{
         points.add(new Vector(max.getX(),0,min.getZ()));
         points.add(new Vector(max.getX(),0,max.getZ()));
         return points;
+    }
+
+    @Override
+    public void draw(){
+        double height = (up+down);
+        Location top = getCenter().toLocation(world).add(0,height/2.0d,0);
+        Location down = getCenter().toLocation(world).subtract(0,height/2.0d,0);
+        Particle.Circle("END_ROD", top,radius,360,0,0,0,0,0,true,null);
+        Particle.Circle("END_ROD", getCenter().toLocation(world),radius,360,0,0,0,0,0,true,null);
+        Particle.Circle("END_ROD", down,radius,360,0,0,0,0,0,true,null);
+
+        Vector linestart = new Vector(0,0,radius);
+        for(int i = 0; i < 8 ; i++){
+            Location start = down.clone().add(linestart);
+            Location end = start.clone().add(0,height,0);
+            Line("END_ROD",start,end,0,0,0,0,0,0.1f,true,null);
+            linestart.rotateAroundY(Math.PI/4);
+        }
     }
     //-----------------------------------------------------------------------------------------------------------------------
     public Collection<Entity> getEntities(@Nullable Predicate<Entity> predicate){

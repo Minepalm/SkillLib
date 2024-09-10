@@ -10,6 +10,8 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.function.Predicate;
 
+import static org.karn.skilllib.collider.Particle.Line;
+
 
 public class Sphere extends Collider{
     private double radius;
@@ -37,6 +39,12 @@ public class Sphere extends Collider{
 
         return new Vector(closestX, closestY, closestZ).distanceSquared(center) <= Math.pow(radius, 2);
     }
+
+    @Override
+    public void draw(){
+        Particle.Sphere("END_ROD",getCenter().toLocation(world),radius,360,0,0,0,0,0,true,null);
+    }
+
     //-----------------------------------------------------------------------------------------------------------------------
     public Collection<Entity> getEntities(@Nullable Predicate<Entity> predicate){
         Predicate<Entity> fillter = entity -> isCollide(entity.getBoundingBox()) &&

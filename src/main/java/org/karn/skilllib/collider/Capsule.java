@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Predicate;
 
+import static org.karn.skilllib.collider.Particle.Line;
+import static org.karn.skilllib.collider.Particle.getVector;
+
 
 public class Capsule extends Collider{
     private Location start;
@@ -68,6 +71,36 @@ public class Capsule extends Collider{
         return box.clone().expand(lineRadius).rayTrace(start.toVector(), direction, range) != null;
     }
 
+    @Override
+    public void draw(){
+        if(direction.isZero()){
+            Particle.Sphere("END_ROD",getCenter().toLocation(world),
+                    lineRadius,360,0,0,0,0,0,true,null);
+            return;
+        }
+        Location end = start.clone().add(direction.clone().normalize().multiply(range));
+
+        Vector v = Particle.getVector(Particle.getYaw(direction),Particle.getPitch(direction)-90.0d);
+
+        Vector v2 = Particle.getVector(Particle.getYaw(direction)+90.0d,0);
+
+        Particle.Cycle("END_ROD",start,lineRadius,v,direction,
+                360,360,0,true,0,0,0,0,0,true,null);
+        Particle.Cycle("END_ROD",end,lineRadius,v,direction,
+                360,360,0,true,0,0,0,0,0,true,null);
+
+        Particle.Cycle("END_ROD",start,lineRadius,direction,v,
+                360,360,0,true,0,0,0,0,0,true,null);
+        Particle.Cycle("END_ROD",end,lineRadius,direction,v,
+                360,360,0,true,0,0,0,0,0,true,null);
+
+        Particle.Cycle("END_ROD",start,lineRadius,direction,v2,
+                360,360,0,true,0,0,0,0,0,true,null);
+        Particle.Cycle("END_ROD",end,lineRadius,direction,v2,
+                360,360,0,true,0,0,0,0,0,true,null);
+
+        Line("END_ROD",start,end,0,0,0,0,0,0.1f,true,null);
+    }
     //-----------------------------------------------------------------------------------------------------------------------
     public Collection<Entity> getEntities(@Nullable Predicate<Entity> predicate){
         Predicate<Entity> fillter = entity -> isCollide(entity.getBoundingBox()) &&

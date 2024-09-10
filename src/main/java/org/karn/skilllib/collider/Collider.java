@@ -28,7 +28,11 @@ public class Collider {
     }
 
     public Vector getCenter(){
-        return center;
+        return center.clone();
+    }
+
+    public void draw(){
+
     }
     //---------------------------------------------------------------------------------------------------------------
 
