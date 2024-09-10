@@ -10,6 +10,7 @@ import org.bukkit.util.Vector;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 import static org.karn.skilllib.collider.Particle.Line;
@@ -66,6 +67,14 @@ public class Capsule extends Collider{
         });
         return sortedList; // 정렬된 리스트 반환
     };
+
+    public boolean isCollide(Entity e) {
+        if(!Objects.equals(e.getWorld(),world)){
+            return false;
+        }
+        BoundingBox box = e.getBoundingBox();
+        return box.clone().expand(lineRadius).rayTrace(start.toVector(), direction, range) != null;
+    }
 
     public boolean isCollide(BoundingBox box) {
         return box.clone().expand(lineRadius).rayTrace(start.toVector(), direction, range) != null;

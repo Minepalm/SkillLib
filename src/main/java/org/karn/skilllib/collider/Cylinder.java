@@ -11,6 +11,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 import static java.lang.Math.abs;
@@ -37,6 +38,22 @@ public class Cylinder extends Collider{
 
     public static Cylinder create(Location l, double up,double down,double radius){
         return new Cylinder(l,up,down,radius);
+    }
+
+    public boolean isCollide(Entity e) {
+        if(!Objects.equals(e.getWorld(),world)){
+            return false;
+        }
+        BoundingBox box = e.getBoundingBox();
+        if(center.getY() + ((up+down)*0.5d) < box.getMinY() || center.getY() - ((up+down)*0.5d) > box.getMaxY()){
+            return false;
+        }
+        for (Vector point : getPoints(box)) {
+            Vector centerTemp = center.clone().setY(0);
+            double dis = centerTemp.distance(point);
+            if (dis < radius) return true;
+        }
+        return false;
     }
 
     public boolean isCollide(BoundingBox box) {

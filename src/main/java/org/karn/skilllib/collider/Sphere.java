@@ -8,6 +8,7 @@ import org.bukkit.util.Vector;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 import static org.karn.skilllib.collider.Particle.Line;
@@ -25,6 +26,23 @@ public class Sphere extends Collider{
 
     public static Sphere create(Location l,double radius){
         return new Sphere(l,radius);
+    }
+
+    public boolean isCollide(Entity e) {
+        if(!Objects.equals(e.getWorld(),world)){
+            return false;
+        }
+        BoundingBox box = e.getBoundingBox();
+        Vector boxcenter = box.getCenter();
+        double halfWidthX = box.getWidthX()/2.0;
+        double halfHeight = box.getHeight()/2.0;
+        double halfDepthZ = box.getWidthZ()/2.0;
+
+        double closestX = Math.max(boxcenter.getX() - halfWidthX, Math.min(center.getX(), boxcenter.getX() + halfWidthX));
+        double closestY = Math.max(boxcenter.getY() - halfHeight, Math.min(center.getY(), boxcenter.getY() + halfHeight));
+        double closestZ = Math.max(boxcenter.getZ() - halfDepthZ, Math.min(center.getZ(), boxcenter.getZ() + halfDepthZ));
+
+        return new Vector(closestX, closestY, closestZ).distanceSquared(center) <= Math.pow(radius, 2);
     }
 
     public boolean isCollide(BoundingBox box) {
