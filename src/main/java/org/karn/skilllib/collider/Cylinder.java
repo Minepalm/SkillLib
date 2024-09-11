@@ -44,41 +44,28 @@ public class Cylinder extends Collider{
         if(!Objects.equals(e.getWorld(),world)){
             return false;
         }
-        BoundingBox box = e.getBoundingBox();
-        if(center.getY() + ((up+down)*0.5d) < box.getMinY() || center.getY() - ((up+down)*0.5d) > box.getMaxY()){
-            return false;
-        }
-        for (Vector point : getPoints(box)) {
-            Vector centerTemp = center.clone().setY(0);
-            double dis = centerTemp.distance(point);
-            if (dis < radius) return true;
-        }
-        return false;
+        return isCollide(e.getBoundingBox());
     }
 
     public boolean isCollide(BoundingBox box) {
-        if(center.getY() + ((up+down)*0.5d) < box.getMinY() || center.getY() - ((up+down)*0.5d) > box.getMaxY()){
+        Vector cylcenter = getCenter();
+        Vector centerbox = box.getCenter();
+        double halfWidthX = box.getWidthX() / 2.0;
+        double halfHeight = box.getHeight() / 2.0;
+
+        // Calculate the closest point on the entity's bounding box to the cylinder center
+        double closestX = Math.max(centerbox.getX() - halfWidthX, Math.min(cylcenter.getX(), centerbox.getX() + halfWidthX));
+        double closestZ = Math.max(centerbox.getZ() - halfWidthX, Math.min(cylcenter.getZ(), centerbox.getZ() + halfWidthX));
+
+        // Check if the closest point is within the cylinder's horizontal boundary
+        double distanceSquared = new Vector(closestX, cylcenter.getY(), closestZ).distanceSquared(cylcenter);
+        if (distanceSquared > Math.pow(radius, 2)) {
             return false;
         }
 
-        for (Vector point : getPoints(box)) {
-            Vector centerTemp = center.clone().setY(0);
-            double dis = centerTemp.distance(point);
-            if (dis < radius) return true;
-        }
-
-        return false;
-    }
-
-    private static List<Vector> getPoints(BoundingBox box){
-        Vector min = box.getMin();
-        Vector max = box.getMax();
-        List<Vector> points = new ArrayList<>();
-        points.add(new Vector(min.getX(),0,min.getZ()));
-        points.add(new Vector(min.getX(),0,max.getZ()));
-        points.add(new Vector(max.getX(),0,min.getZ()));
-        points.add(new Vector(max.getX(),0,max.getZ()));
-        return points;
+        // Check if the closest point is within the cylinder's vertical boundaries
+        double closestY = Math.max(centerbox.getY() - halfHeight, Math.min(cylcenter.getY(), centerbox.getY() + halfHeight));
+        return !(closestY < cylcenter.getY() - down || closestY > cylcenter.getY() + up);
     }
 
     @Override

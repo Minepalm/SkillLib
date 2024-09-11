@@ -32,17 +32,7 @@ public class Sphere extends Collider{
         if(!Objects.equals(e.getWorld(),world)){
             return false;
         }
-        BoundingBox box = e.getBoundingBox();
-        Vector boxcenter = box.getCenter();
-        double halfWidthX = box.getWidthX()/2.0;
-        double halfHeight = box.getHeight()/2.0;
-        double halfDepthZ = box.getWidthZ()/2.0;
-
-        double closestX = Math.max(boxcenter.getX() - halfWidthX, Math.min(center.getX(), boxcenter.getX() + halfWidthX));
-        double closestY = Math.max(boxcenter.getY() - halfHeight, Math.min(center.getY(), boxcenter.getY() + halfHeight));
-        double closestZ = Math.max(boxcenter.getZ() - halfDepthZ, Math.min(center.getZ(), boxcenter.getZ() + halfDepthZ));
-
-        return new Vector(closestX, closestY, closestZ).distanceSquared(center) <= Math.pow(radius, 2);
+        return isCollide(e.getBoundingBox());
     }
 
     public boolean isCollide(BoundingBox box) {

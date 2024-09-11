@@ -72,10 +72,8 @@ public class Capsule extends Collider{
         if(!Objects.equals(e.getWorld(),world)){
             return false;
         }
-        BoundingBox box = e.getBoundingBox();
-        return box.clone().expand(lineRadius).rayTrace(start.toVector(), direction, range) != null;
+        return isCollide(e.getBoundingBox());
     }
-
     public boolean isCollide(BoundingBox box) {
         return box.clone().expand(lineRadius).rayTrace(start.toVector(), direction, range) != null;
     }

@@ -5,7 +5,6 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.util.BoundingBox;
-import org.bukkit.util.Vector;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -59,7 +58,7 @@ public class AABB extends Collider{
         if(!Objects.equals(e.getWorld(),world)){
             return false;
         }
-        return aabb.overlaps(e.getBoundingBox());
+        return isCollide(e.getBoundingBox());
     }
 
     public boolean isCollide(BoundingBox box) {
