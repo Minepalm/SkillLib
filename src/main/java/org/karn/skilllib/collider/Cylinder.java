@@ -32,8 +32,8 @@ public class Cylinder extends Collider{
         this.radius = radius;
         this.up = up;
         this.down = down;
-        Vector top = center.clone().setY(center.getY() + ((up+down)*0.5d));
-        this.diagonal = this.center.distance(top);
+        this.diagonal = (new Vector(radius*2,up+down,0)).length();
+
     }
 
     public static Cylinder create(Location l, double up,double down,double radius){
