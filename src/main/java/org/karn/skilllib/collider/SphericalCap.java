@@ -40,6 +40,8 @@ public class SphericalCap extends Sphere{
         return new SphericalCap(center,direction,radius,degree);
     }
 
+
+    @Override
     public boolean isCollide(Location l) {
         if(!Objects.equals(l.getWorld(),world)){
             return false;
@@ -47,11 +49,13 @@ public class SphericalCap extends Sphere{
         return isCollide(l.toVector());
     }
 
+    @Override
     public boolean isCollide(Vector v) {
         double angle = Math.toRadians(degree);
         return v.clone().subtract(getCenter()).angle(direction) <= angle;
     }
 
+    @Override
     public boolean isCollide(Entity e) {
         if(!Objects.equals(e.getWorld(),world)){
             return false;
@@ -59,6 +63,7 @@ public class SphericalCap extends Sphere{
         return isCollide(e.getBoundingBox());
     }
 
+    @Override
     public boolean isCollide(BoundingBox box){
         double radiusSq = this.radius * this.radius;
         Vector capcenter = getCenter();
