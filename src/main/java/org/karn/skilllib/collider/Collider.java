@@ -4,12 +4,14 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
+import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 public class Collider {
@@ -87,4 +89,67 @@ public class Collider {
         }
         return nearbyEntities;
     }
+
+    //----------------------------------------------------------------------------------------------------------
+    public static Location getMinDistLoc_DotWithAABB(Location l, Entity e){
+        if(!Objects.equals(e.getWorld(),l.getWorld())){
+            return null;
+        }
+        return getMinDistLoc_DotWithAABB(l.toVector(),e.getBoundingBox()).toLocation(l.getWorld());
+    }
+
+    public static Location getMinDistLoc_DotWithAABB(Location l, BoundingBox box){
+        return getMinDistLoc_DotWithAABB(l.toVector(),box).toLocation(l.getWorld());
+    }
+
+    public static Vector getMinDistLoc_DotWithAABB(Vector l, BoundingBox box){
+        Vector boxcenter = box.getCenter();
+        double halfWidthX = box.getWidthX()/2.0;
+        double halfHeight = box.getHeight()/2.0;
+        double halfDepthZ = box.getWidthZ()/2.0;
+
+        double closestX = Math.max(boxcenter.getX() - halfWidthX, Math.min(l.getX(), boxcenter.getX() + halfWidthX));
+        double closestY = Math.max(boxcenter.getY() - halfHeight, Math.min(l.getY(), boxcenter.getY() + halfHeight));
+        double closestZ = Math.max(boxcenter.getZ() - halfDepthZ, Math.min(l.getZ(), boxcenter.getZ() + halfDepthZ));
+
+        return new Vector(closestX, closestY, closestZ);
+    }
+
+
+    public static Location getMinDistLoc_DotWithLine(Location pointC,Location Linestart, Location Lineend){
+        if(Linestart.getWorld() != Lineend.getWorld() || Linestart.getWorld() != pointC.getWorld()){
+            return null;
+        }
+        return getMinDistLoc_DotWithLine(pointC.toVector(),Linestart.toVector(),Lineend.toVector()).toLocation(pointC.getWorld());
+    }
+
+    public static Vector getMinDistLoc_DotWithLine(Vector pointC,Vector Linestart, Vector Lineend){
+        Vector lineAB = Lineend.clone().subtract(Linestart);
+        Vector lineAC = pointC.clone().subtract(Linestart);
+        double lineABLengthSquared = lineAB.lengthSquared();
+        double dotProduct = lineAC.dot(lineAB);
+        if (dotProduct <= 0) {
+            return Linestart;
+        }
+        if (dotProduct >= lineABLengthSquared) {
+            return Lineend;
+        }
+        double distanceAlongLine = dotProduct / lineABLengthSquared;
+        return lineAB.multiply(distanceAlongLine).add(Linestart);
+    }
+
+    public static Location getMinDistLoc_DotWithVertical(Location pointC, Location lineStart, double height) {
+        if(lineStart.getWorld() != pointC.getWorld()) {
+            return null;
+        }
+        return getMinDistLoc_DotWithVertical(pointC.toVector(),lineStart.toVector(),height).toLocation(pointC.getWorld());
+    }
+
+    public static Vector getMinDistLoc_DotWithVertical(Vector pointC, Vector lineStart, double height) {
+        Vector lineEnd = lineStart.clone().setY(lineStart.getY()+height);
+        double clampedY = Math.max(lineStart.getY(), Math.min(pointC.getY(), lineEnd.getY()));
+        // 반환할 Location 객체 생성, x와 z는 선분의 시작점 또는 끝점과 동일
+        return new Vector(lineStart.getX(), clampedY, lineStart.getZ());
+    }
+
 }

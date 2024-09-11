@@ -15,7 +15,7 @@ import static org.karn.skilllib.collider.Particle.Line;
 
 
 public class Sphere extends Collider{
-    private double radius;
+    protected double radius;
     //-----------------------------------------------------------------------------------------------------------------------
 
     public Sphere(Location l,double radius){
@@ -26,6 +26,17 @@ public class Sphere extends Collider{
 
     public static Sphere create(Location l,double radius){
         return new Sphere(l,radius);
+    }
+
+    public boolean isCollide(Location l) {
+        if(!Objects.equals(l.getWorld(),world)){
+            return false;
+        }
+        return isCollide(l.toVector());
+    }
+
+    public boolean isCollide(Vector v) {
+        return v.distanceSquared(getCenter()) <= radius*radius;
     }
 
     public boolean isCollide(Entity e) {

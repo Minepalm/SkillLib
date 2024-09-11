@@ -68,6 +68,18 @@ public class Capsule extends Collider{
         return sortedList; // 정렬된 리스트 반환
     };
 
+    public boolean isCollide(Location l) {
+        if(!Objects.equals(l.getWorld(),world)){
+            return false;
+        }
+        return isCollide(l.toVector());
+    }
+
+    public boolean isCollide(Vector v) {
+        Vector end = start.toVector().add(direction.normalize().multiply(range));
+        return getMinDistLoc_DotWithLine(v,start.toVector(),end).distanceSquared(v) <= lineRadius*lineRadius;
+    }
+
     public boolean isCollide(Entity e) {
         if(!Objects.equals(e.getWorld(),world)){
             return false;

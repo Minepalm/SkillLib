@@ -5,6 +5,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.util.BoundingBox;
+import org.bukkit.util.Vector;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -54,6 +55,18 @@ public class AABB extends Collider{
         return new AABB(l,up,side,down);
     }
 
+
+    public boolean isCollide(Location l) {
+        if(!Objects.equals(l.getWorld(),world)){
+            return false;
+        }
+        return isCollide(l.toVector());
+    }
+
+    public boolean isCollide(Vector v) {
+        return aabb.contains(v);
+    }
+
     public boolean isCollide(Entity e) {
         if(!Objects.equals(e.getWorld(),world)){
             return false;
@@ -65,7 +78,6 @@ public class AABB extends Collider{
         return aabb.overlaps(box);
     }
 
-
     public Location[] getAllPoints(){
         Location[] array = {
                 new Location(this.world,aabb.getMinX(), aabb.getMinY(), aabb.getMinZ()),
@@ -76,6 +88,20 @@ public class AABB extends Collider{
                 new Location(this.world,aabb.getMaxX(), aabb.getMinY(), aabb.getMaxZ()),
                 new Location(this.world,aabb.getMaxX(), aabb.getMaxY(), aabb.getMinZ()),
                 new Location(this.world,aabb.getMaxX(), aabb.getMaxY(), aabb.getMaxZ())
+        };
+        return array;
+    }
+
+    public static Vector[] getAllPoints(BoundingBox aabb){
+        Vector[] array = {
+                new Vector(aabb.getMinX(), aabb.getMinY(), aabb.getMinZ()),
+                new Vector(aabb.getMinX(), aabb.getMinY(), aabb.getMaxZ()),
+                new Vector(aabb.getMinX(), aabb.getMaxY(), aabb.getMinZ()),
+                new Vector(aabb.getMinX(), aabb.getMaxY(), aabb.getMaxZ()),
+                new Vector(aabb.getMaxX(), aabb.getMinY(), aabb.getMinZ()),
+                new Vector(aabb.getMaxX(), aabb.getMinY(), aabb.getMaxZ()),
+                new Vector(aabb.getMaxX(), aabb.getMaxY(), aabb.getMinZ()),
+                new Vector(aabb.getMaxX(), aabb.getMaxY(), aabb.getMaxZ())
         };
         return array;
     }

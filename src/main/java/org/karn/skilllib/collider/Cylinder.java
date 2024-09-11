@@ -33,11 +33,31 @@ public class Cylinder extends Collider{
         this.up = up;
         this.down = down;
         this.diagonal = (new Vector(radius*2,up+down,0)).length();
-
     }
 
     public static Cylinder create(Location l, double up,double down,double radius){
         return new Cylinder(l,up,down,radius);
+    }
+
+    public boolean isCollide(Location l) {
+        if(!Objects.equals(l.getWorld(),world)){
+            return false;
+        }
+        return isCollide(l.toVector());
+    }
+
+    public boolean isCollide(Vector v) {
+        Vector cylcenter = getCenter();
+
+        Vector delta = v.clone().subtract(cylcenter);
+        double distanceSquared = delta.getX() * delta.getX() + delta.getZ() * delta.getZ();
+        if (distanceSquared > Math.pow(radius, 2)) {
+            return false;
+        }
+
+        double height = down + up;
+        double y = v.getY();
+        return y >= (cylcenter.getY() - height*0.5d) && y <= (cylcenter.getY() + height*0.5d); // Y좌표가 원통의 수직 범위 내에 있는지 반환
     }
 
     public boolean isCollide(Entity e) {
@@ -53,17 +73,14 @@ public class Cylinder extends Collider{
         double halfWidthX = box.getWidthX() / 2.0;
         double halfHeight = box.getHeight() / 2.0;
 
-        // Calculate the closest point on the entity's bounding box to the cylinder center
         double closestX = Math.max(centerbox.getX() - halfWidthX, Math.min(cylcenter.getX(), centerbox.getX() + halfWidthX));
         double closestZ = Math.max(centerbox.getZ() - halfWidthX, Math.min(cylcenter.getZ(), centerbox.getZ() + halfWidthX));
 
-        // Check if the closest point is within the cylinder's horizontal boundary
         double distanceSquared = new Vector(closestX, cylcenter.getY(), closestZ).distanceSquared(cylcenter);
         if (distanceSquared > Math.pow(radius, 2)) {
             return false;
         }
 
-        // Check if the closest point is within the cylinder's vertical boundaries
         double closestY = Math.max(centerbox.getY() - halfHeight, Math.min(cylcenter.getY(), centerbox.getY() + halfHeight));
         return !(closestY < cylcenter.getY() - down || closestY > cylcenter.getY() + up);
     }
