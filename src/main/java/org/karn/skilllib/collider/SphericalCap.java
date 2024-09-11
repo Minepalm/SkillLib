@@ -3,11 +3,15 @@ package org.karn.skilllib.collider;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
+import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 public class SphericalCap extends Sphere{
     public Vector direction;
@@ -26,6 +30,14 @@ public class SphericalCap extends Sphere{
         super(center,radius);
         this.direction = direction.clone().normalize();
         this.degree = degree;
+    }
+
+    public static SphericalCap create(Location center, Vector direction, double degree){
+        return new SphericalCap(center,direction,degree);
+    }
+
+    public static SphericalCap create(Location center, Vector direction, double radius, double degree){
+        return new SphericalCap(center,direction,radius,degree);
     }
 
     public boolean isCollide(Location l) {
@@ -76,4 +88,26 @@ public class SphericalCap extends Sphere{
         return minlinedistloc.subtract(capcenter).angle(direction) <= angle;
     }
     //-----------------------------------------------------------------------------------------------------------------------
+
+    public Collection<Entity> getEntities(@Nullable Predicate<Entity> predicate){
+        Predicate<Entity> fillter = entity -> isCollide(entity.getBoundingBox()) &&
+                (predicate == null || predicate.test(entity));
+        return Collider.getEntitiesInNearChunks(center.toLocation(world),radius,fillter);
+    }
+
+    public Collection<Entity> getLivingEntities(@Nullable Predicate<Entity> predicate){
+        Predicate<Entity> fillter = entity ->
+                entity.getType().isAlive() && isCollide(entity.getBoundingBox()) &&
+                        (predicate == null || predicate.test(entity));
+        return Collider.getEntitiesInNearChunks(center.toLocation(world),radius,fillter);
+    }
+
+    public Collection<Entity> getPlayers(@Nullable Predicate<Entity> predicate){
+        Predicate<Entity> fillter = entity ->
+                entity.getType().equals(EntityType.PLAYER) && isCollide(entity.getBoundingBox()) &&
+                        (predicate == null || predicate.test(entity));
+        return Collider.getEntitiesInNearChunks(center.toLocation(world),radius,fillter);
+    }
+
+
 }
