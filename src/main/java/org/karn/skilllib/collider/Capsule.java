@@ -28,9 +28,9 @@ public class Capsule extends Collider{
         super(start.getWorld());
         if(direction.isZero()){
             range = 0.0;
-            this.center = start.toVector().add(direction.clone().normalize().multiply(range*0.5d));
-        }else{
             this.center = start.toVector();
+        }else{
+            this.center = start.toVector().add(direction.clone().normalize().multiply(range*0.5d));
         }
         this.start = start.clone();
         this.direction = direction.clone();
