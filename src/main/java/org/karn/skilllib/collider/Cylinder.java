@@ -49,15 +49,15 @@ public class Cylinder extends Collider{
     public boolean isCollide(Vector v) {
         Vector cylcenter = getCenter();
 
-        Vector delta = v.clone().subtract(cylcenter);
-        double distanceSquared = delta.getX() * delta.getX() + delta.getZ() * delta.getZ();
-        if (distanceSquared > Math.pow(radius, 2)) {
-            return false;
-        }
-
         double height = down + up;
         double y = v.getY();
-        return y >= (cylcenter.getY() - height*0.5d) && y <= (cylcenter.getY() + height*0.5d); // Y좌표가 원통의 수직 범위 내에 있는지 반환
+        if (y < (cylcenter.getY() - height*0.5d) || y > (cylcenter.getY() + height*0.5d)){
+            return false; // Y좌표가 원통의 수직 범위 내에 있는지 반환
+        }
+
+        Vector delta = v.clone().subtract(cylcenter);
+        double distanceSquared = delta.getX() * delta.getX() + delta.getZ() * delta.getZ();
+        return distanceSquared <= Math.pow(radius, 2);
     }
 
     public boolean isCollide(Entity e) {
