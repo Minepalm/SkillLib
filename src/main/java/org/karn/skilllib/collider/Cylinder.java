@@ -90,9 +90,9 @@ public class Cylinder extends Collider{
         double height = (up+down);
         Location top = getCenter().toLocation(world).add(0,height/2.0d,0);
         Location down = getCenter().toLocation(world).subtract(0,height/2.0d,0);
-        Particle.Circle("END_ROD", top,radius,360,0,0,0,0,0,true,null);
-        Particle.Circle("END_ROD", getCenter().toLocation(world),radius,360,0,0,0,0,0,true,null);
-        Particle.Circle("END_ROD", down,radius,360,0,0,0,0,0,true,null);
+        Particle.Circle("END_ROD", top,radius,60,0,0,0,0,0,true,null);
+        Particle.Circle("END_ROD", getCenter().toLocation(world),radius,60,0,0,0,0,0,true,null);
+        Particle.Circle("END_ROD", down,radius,60,0,0,0,0,0,true,null);
 
         Vector linestart = new Vector(0,0,radius);
         for(int i = 0; i < 8 ; i++){

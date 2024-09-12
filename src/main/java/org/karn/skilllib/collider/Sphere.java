@@ -61,7 +61,7 @@ public class Sphere extends Collider{
 
     @Override
     public void draw(){
-        Particle.Sphere("END_ROD",getCenter().toLocation(world),radius,360,0,0,0,0,0,true,null);
+        Particle.Sphere("END_ROD",getCenter().toLocation(world),radius,40,0,0,0,0,0,true,null);
     }
 
     //-----------------------------------------------------------------------------------------------------------------------

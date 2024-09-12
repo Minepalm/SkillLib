@@ -94,7 +94,7 @@ public class Capsule extends Collider{
     public void draw(){
         if(direction.isZero()){
             Particle.Sphere("END_ROD",getCenter().toLocation(world),
-                    lineRadius,360,0,0,0,0,0,true,null);
+                    lineRadius,60,0,0,0,0,0,true,null);
             return;
         }
         Location end = start.clone().add(direction.clone().normalize().multiply(range));
@@ -104,19 +104,19 @@ public class Capsule extends Collider{
         Vector v2 = Particle.getVector(Particle.getYaw(direction)+90.0d,0);
 
         Particle.Cycle("END_ROD",start,lineRadius,v,direction,
-                360,360,0,true,0,0,0,0,0,true,null);
+                60,360,0,true,0,0,0,0,0,true,null);
         Particle.Cycle("END_ROD",end,lineRadius,v,direction,
-                360,360,0,true,0,0,0,0,0,true,null);
+                60,360,0,true,0,0,0,0,0,true,null);
 
         Particle.Cycle("END_ROD",start,lineRadius,direction,v,
-                360,360,0,true,0,0,0,0,0,true,null);
+                60,360,0,true,0,0,0,0,0,true,null);
         Particle.Cycle("END_ROD",end,lineRadius,direction,v,
-                360,360,0,true,0,0,0,0,0,true,null);
+                60,360,0,true,0,0,0,0,0,true,null);
 
         Particle.Cycle("END_ROD",start,lineRadius,direction,v2,
-                360,360,0,true,0,0,0,0,0,true,null);
+                60,360,0,true,0,0,0,0,0,true,null);
         Particle.Cycle("END_ROD",end,lineRadius,direction,v2,
-                360,360,0,true,0,0,0,0,0,true,null);
+                60,360,0,true,0,0,0,0,0,true,null);
 
         Line("END_ROD",start,end,0,0,0,0,0,0.1f,true,null);
     }
